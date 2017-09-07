@@ -1,3 +1,4 @@
-import setts from './CtrlUI'
+import ui from './ctrl.ui'
 
-console.log("lalala", setts)
+let crtl = window.ctrl || (window.ctrl = {})
+crtl.ui = ui

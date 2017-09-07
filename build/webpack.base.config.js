@@ -1,16 +1,11 @@
-const webpack = require('webpack')
-const path = require('path')
 const pkginfo = require('../package.json')
+const resolve = (dir) =>  { return require("path").join(__dirname, '..', dir) }
 
-function resolve (dir) {
-	return path.join(__dirname, '..', dir)
-}
-
-let config = {
+module.exports =  config = {
 	entry: resolve('src/index.js'),
 	devtool: 'source-map',
 	output: {
-		path: resolve('lib'),
+		path: resolve(pkginfo.distFolder),
 		filename: pkginfo.name + '.js',
 		library: pkginfo.name,
 		libraryTarget: 'umd',
@@ -18,22 +13,26 @@ let config = {
 	},
 	module: {
 		loaders: [
-			{test: /\.json$/, loader: "json-loader"},
+			{
+				test: /\.json$/,
+				loader: "json-loader"
+			},
 			{
 				test: /(\.jsx|\.js)$/,
 				loader: 'babel-loader',
 				exclude: /(node_modules|bower_components)/,
-				/*query: {
-					presets: [/!*"es2015",*!/  'react'],
+				query: {
+					presets: ["es2015", "react"],
 					plugins: [
-						"transform-es2015-modules-commonjs",
+						["transform-react-jsx", { pragma: "h" }],
+						//"transform-es2015-modules-commonjs",
 						"transform-object-rest-spread",
 						["transform-runtime", {
 							polyfill: false,
 							regenerator: false
 						}]
 					]
-				}*/
+				}
 			}
 		]
 	},
@@ -43,5 +42,3 @@ let config = {
 		}
 	}
 }
-
-module.exports = config;

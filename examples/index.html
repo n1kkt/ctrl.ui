@@ -6,5 +6,30 @@
 </head>
 <body>
 
+<div>some text</div>
+
+<script type='application/javascript' src="ctrl.ui.js"></script>
+
+<script>
+	var setts = {
+		number: 100,
+		label: "text",
+		panel: {
+			another_number: 124,
+			anotherLabel: "text 2",
+			range: {$value: 200, $type: 'slider', $min: 10, $max: 2000}
+		},
+		color$: {v: "#ff00ff", t: 'color'},
+		panel2: {
+			$: {opt1: 1, op2: 2},
+			someVal: 100,
+		}
+	}
+
+	console.log("hey")
+	console.log(setts)
+	console.log("hoy")
+</script>
+
 </body>
 </html>
