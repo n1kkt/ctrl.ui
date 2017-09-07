@@ -1,9 +1,11 @@
 import { h, render, Component } from 'preact';
-import Panel from './components/panel'
+import {settingsParser} from './OptionsParser'
+import {Panel} from './components'
 
 function ui (opts) {
-
-	render(<Panel />, document.body);
+	let data = settingsParser(opts)
+	render(<Panel {...data.options} />, data.options.mount || document.body);
+	return opts
 }
 
 export default ui
