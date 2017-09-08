@@ -1,14 +1,13 @@
 const resolve = (dir) => require("path").join(__dirname, '..', dir)
 
+const webpack = require('webpack')
 const merge = require('webpack-merge')
 const pkginfo = require('../package.json')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
 const baseWebpackConfig = require('./webpack.base.config')
 
 module.exports = merge(baseWebpackConfig, {
-	output: {
-		path: resolve(pkginfo.distFolder),
-		filename: pkginfo.name + '.js'
-	},
+	entry: resolve('src/devIndex.js'),
 	// plugins: [
 	//   new webpack.DefinePlugin({
 	//     'process.env': {
@@ -21,11 +20,12 @@ module.exports = merge(baseWebpackConfig, {
 		noInfo: true
 	},
 	devtool: 'source-map',
-	/*plugins: [
+	plugins: [
+		new webpack.NoEmitOnErrorsPlugin(),
 		new HtmlWebpackPlugin({
-			template: resolve('examples/index.html'),
+			template: resolve('examples/devIndex.html'),
 			filename: 'index.html',
 			inject: 'body'
 		})
-	]*/
+	]
 })

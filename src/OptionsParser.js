@@ -1,4 +1,4 @@
-import {getComponentForValue} from "./ControlType"
+import {getComponentTypeForValue} from "./ControlType"
 
 const newCompData = (name, origin, options, content) => {
 	return {
@@ -9,7 +9,7 @@ const newCompData = (name, origin, options, content) => {
 	}
 }
 
-export function settingsParser(settings) {
+export function settingsParser(settings, name) {
 	const crumbs = ['_root_']
 
 	function parseSettingsObject(settObj, name) {
@@ -40,14 +40,14 @@ export function settingsParser(settings) {
 			const settVal = settObj[settName]
 			let data = (typeof settVal === 'object' && !Array.isArray(settVal))
 				? parseSettingsObject(settVal, settName)
-				: newCompData(settName, settObj, {type: getComponentForValue(settVal), value: settVal})
+				: newCompData(settName, settObj, {type: getComponentTypeForValue(settVal), value: settVal})
 			data.origin = settObj
-			if (data.options.type)
+			// if (data.options.type)
 				compData.content.push(data)
 		})
 
 		if (!compData.options.type)
-			compData.options.type = getComponentForValue(settObj)
+			compData.options.type = getComponentTypeForValue(settObj)
 
 		// remove options from original object, since it may be a simple value
 		// opts.forEach(key => delete settObj[key])
@@ -55,5 +55,5 @@ export function settingsParser(settings) {
 		return compData
 	}
 
-	return parseSettingsObject(settings)
+	return parseSettingsObject(settings, name)
 }
