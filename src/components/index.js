@@ -1,3 +1,3 @@
-export * from './panel'
-export * from './input'
+export * from '@@/panel'
+export * from '@@/input'
 

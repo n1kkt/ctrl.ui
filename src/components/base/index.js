@@ -19,19 +19,25 @@ export default class Base extends Component {
 		return this.props ? this.props.label || fieldNameToLabel(this.props.name) : '_Unnamed_';
 	}
 
+    @bind
+    onChange(newValue, overrideCallback) {
+        const cb = overrideCallback || this.props.onChange
+        if (cb)
+            cb(newValue)
+
+		if (this.props.notifyParentOnChange)
+            this.props.notifyParentOnChange(this.props.name, newValue)
+    }
 }
 
 Base.propTypes = {
+	// required
 	name: PropTypes.string.isRequired,
 	value: PropTypes.oneOfType([
 		PropTypes.string,
 		PropTypes.number,
 	]).isRequired,
+	// optional
 	onChange: PropTypes.func,
-	onFinishChange: PropTypes.func,
-	pattern: PropTypes.oneOfType([
-		PropTypes.instanceOf(RegExp),
-		PropTypes.func,
-		PropTypes.string,
-	]),
+    notifyParentOnChange: PropTypes.func,
 }

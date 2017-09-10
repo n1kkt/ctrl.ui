@@ -1,3 +1,4 @@
+// camelCase|kebab-case|snake_case => "Label case"
 export const fieldNameToLabel = (name) => {
 	let label = name.split(/(?=[A-Z0-9])|[\-\_]/)
 		.map(s => s.toLowerCase())

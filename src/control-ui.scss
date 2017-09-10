@@ -1,0 +1,67 @@
+@import url('https://fonts.googleapis.com/css?family=Space+Mono');
+
+.control-ui-container {
+  display: block;
+  position: absolute;
+  top: 0;
+  right: 5px;
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  background-color: #eee;
+  box-sizing: border-box;
+  border-radius: 3px;
+
+  input {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .label {
+    font-size: 10px;
+    display: inline-block;
+
+    text-overflow: ellipsis;
+    text-align: right;
+    padding: 0 10px;
+    background-color: #ddd;
+  }
+  .value {
+    display: inline-block;
+    float: right;
+    width: 100px;
+
+  }
+
+  .panel {
+    border-radius: 5px;
+  }
+
+  .panel>.label {
+    font-size: 12px;
+    text-align: left;
+    width: 100%;
+    box-sizing: border-box;
+    font-weight: bold;
+    &:after {
+      content: ">";
+      float: right;
+    }
+  }
+
+  .panel>.content {
+    background-color: #909;
+  }
+
+  .control {
+    width: 100%;
+    box-sizing: border-box;
+    height: 24px;
+    background-color: #aaa;
+  }
+
+  .panel {
+    padding: 2px;
+  }
+}

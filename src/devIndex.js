@@ -1,4 +1,4 @@
-export * from './ctrl.ui'
+export * from '@/ctrl.ui'
 
 var setts = {
 	number: 100,
@@ -6,7 +6,12 @@ var setts = {
 	panel: {
 		another_number: 124,
 		anotherLabel: "text 2",
-		range: {$value: 200, $type: 'slider', $min: 10, $max: 2000}
+		range: {$value: 200, $type: 'slider', $min: 10, $max: 2000},
+		subPanel: {
+			subSubPanel: {
+				texta: "A"
+			}
+		}
 	},
 	color: {$value: "#ff00ff", $type: 'color'},
 	color2: "#ff00ff",

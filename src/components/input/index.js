@@ -3,8 +3,6 @@ import PropTypes from 'prop-types';
 import { bind, memoize, debounce } from 'decko';
 import Base from '@@/base';
 
-import {registerTypeCheck, getComponentByType} from '../../ControlType'
-
 export default class Input extends Base {
 	constructor() {
 		super()
@@ -33,17 +31,16 @@ export default class Input extends Base {
 	@bind
 	onChange(evt, overrideCallback) {
 		let newValue = evt.target.value
-
+        console.log('input changed', this.props.name, newValue)
 		// if pattern specified check if new value matches it
-		let ptrn = this.props.pattern
-		if (state.patternCheck && !state.patternCheck(newValue))
-			return evt.preventDefault()
+        let ptrn = this.props.pattern
+        if (this.state.patternCheck && !this.state.patternCheck(newValue))
+            return evt.preventDefault()
 
-		const cb = overrideCallback || this.props.onChange
-		if (cb)
-			cb(newValue)
+		super.onChange(newValue)
 	}
 
+    @bind
 	onFinishChange(evt) {
 		const cb = this.props.onFinishChange
 		if (cb)
@@ -53,7 +50,7 @@ export default class Input extends Base {
 	render({label, value, name}, state) {
 		let labelText = label || state.label
 		return (
-			<div class="inputControl">
+			<div class="control">
 				<div class="label">{labelText}</div>
 				<div class="value">
 					<input type="text" value={value}
@@ -66,22 +63,17 @@ export default class Input extends Base {
 }
 
 
-registerTypeCheck(Input, 'input', [
-	['string', val => 1],
-	['number', val => 1],
-])
+Input.valueTypes = {
+	string: val => 1,
+    number: val => 1,
+}
 
 Input.propTypes = {
-	name: PropTypes.string.isRequired,
-	value: PropTypes.oneOfType([
-		PropTypes.string,
-		PropTypes.number,
-	]).isRequired,
-	onChange: PropTypes.func,
-	onFinishChange: PropTypes.func,
 	pattern: PropTypes.oneOfType([
 		PropTypes.instanceOf(RegExp),
 		PropTypes.func,
 		PropTypes.string,
 	]),
 }
+
+export { Input }
