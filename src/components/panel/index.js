@@ -30,7 +30,10 @@ export default class Panel extends Base {
     render({label, content}, state) {
         return (
             <div class="panel">
-                <div class="label">{state.label}</div>
+                <div class="label">
+                    <div class="text">{state.label}</div>
+                    <div class="expand-symbol"><span class="fa fa-chevron-right"/></div>
+                </div>
                 <div class="content">
                 {content.map(childData => Panel.constructChild(childData, {
                     notifyParentOnChange: this.onChildChange
