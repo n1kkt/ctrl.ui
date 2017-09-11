@@ -1,14 +1,18 @@
 import { h, Component } from 'preact';
 import PropTypes from 'prop-types';
 import { bind, memoize, debounce } from 'decko';
-import Base from '@@/base';
+import { Base } from '@@/components/base';
 
 export default class Input extends Base {
+
 	constructor() {
 		super()
 
 		this.state.patternCheck = null
+		this.state.value = null
 	}
+
+	/* ------- OVERRIDES ------- */
 
 	componentDidMount() {
 		super.componentDidMount()
@@ -25,19 +29,46 @@ export default class Input extends Base {
 			patternCheck = val => ptrn.test(val)
 		}
 
-		this.setState({ patternCheck: patternCheck });
+		this.setState({
+			patternCheck: patternCheck,
+			value: this.props.value,
+		});
 	}
 
-	@bind
 	onChange(evt, overrideCallback) {
 		let newValue = evt.target.value
-        console.log('input changed', this.props.name, newValue)
-		// if pattern specified check if new value matches it
-        let ptrn = this.props.pattern
-        if (this.state.patternCheck && !this.state.patternCheck(newValue))
-            return evt.preventDefault()
 
-		super.onChange(newValue)
+		// if pattern specified check if new value matches it
+		let ptrn = this.props.pattern
+		if (this.state.patternCheck && !this.state.patternCheck(newValue)) {
+			//evt.target.value = this.state.value
+			this.setState({
+				value: this.state.value,
+			});
+			return
+		}
+
+		console.log('input changed', this.props.name, newValue)
+
+		this.setState({
+			value: newValue,
+		});
+
+		super.onChange(newValue, overrideCallback)
+	}
+
+	/* ------- METHODS ------- */
+	@bind
+	onKeyDown(evt) {
+		if (evt.keyCode === 0)
+			return true
+		let newValue = evt.target.value + String.fromCharCode(evt.keyCode)
+		// if pattern specified check if new value matches it
+		let ptrn = this.props.pattern
+		if (this.state.patternCheck && !this.state.patternCheck(newValue)) {
+			return false
+		}
+		return true
 	}
 
     @bind
@@ -47,21 +78,23 @@ export default class Input extends Base {
 			this.onChange(evt, cb)
 	}
 
-	render({label, value, name}, state) {
-		let labelText = label || state.label
+	/* ----------------------- */
+
+	render({}, {value, label}) {
 		return (
 			<div class="control">
-				<div class="label">{labelText}</div>
+				<div class="label">{label}</div>
 				<div class="value">
 					<input type="text" value={value}
 						   onInput={this.onChange}
-						   onChange={this.onFinishChange} />
+						   onChange={this.onFinishChange}
+						   />
 				</div>
 			</div>
 		);
 	}
 }
-
+export { Input }
 
 Input.valueTypes = {
 	string: val => 1,
@@ -76,4 +109,3 @@ Input.propTypes = {
 	]),
 }
 
-export { Input }

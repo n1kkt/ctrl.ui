@@ -9,7 +9,14 @@ var setts = {
 		range: {$value: 200, $type: 'slider', $min: 10, $max: 2000},
 		subPanel: {
 			subSubPanel: {
-				texta: "A"
+				texta: {
+					$value: "A",
+					$pattern: /^[A-Z]*$/,
+					$onChange: function (newVal) {
+						console.log('it changes to : ' + newVal)
+						console.log('and it is : ' + setts.panel.subPanel.subSubPanel.texta)
+					}
+				}
 			}
 		}
 	},

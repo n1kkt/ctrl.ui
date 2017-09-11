@@ -1,11 +1,8 @@
 import {h, Component} from 'preact';
 import PropTypes from 'prop-types';
 import { bind, memoize, debounce } from 'decko';
-import Base from '@@/base';
-// import all components so they could register type association
-import * as components from "@@";
-
-import {registerTypeCheck, getComponentByType} from '../../ControlUI'
+import { Base } from '@@/components/base';
+import { ExpandChevron } from '@@/components/expand-chevron';
 
 export default class Panel extends Base {
 
@@ -21,20 +18,39 @@ export default class Panel extends Base {
             return null
     }
 
+    /* ------- OVERRIDES ------- */
+
+	componentDidMount() {
+		super.componentDidMount()
+		this.setState({ expanded: this.props.expanded });
+	}
+
+	/* ------- METHODS ------- */
+
     @bind
     onChildChange(name, newValue) {
         console.log('child changed', name, newValue)
         super.onChange({[name]: newValue})
     }
 
-    render({label, content}, state) {
+	@bind
+	toggleExpanded() {
+		this.setState({ expanded: !this.state.expanded });
+	}
+
+	/* ----------------------- */
+
+    render({content}, {expanded, label}) {
         return (
             <div class="panel">
-                <div class="label">
-                    <div class="text">{state.label}</div>
-                    <div class="expand-symbol"><span class="fa fa-chevron-right"/></div>
+                <div class="label" onClick={this.toggleExpanded}>
+                    <div class="text">{label}</div>
+					<div class="expand-symbol">
+                    {/*<span class="fa fa-chevron-right"/>*/}
+                    	<ExpandChevron expanded={expanded}/>
+					</div>
                 </div>
-                <div class="content">
+                <div class="content" style={`${expanded ? '': 'display: none'}`}>
                 {content.map(childData => Panel.constructChild(childData, {
                     notifyParentOnChange: this.onChildChange
                 }))}
@@ -43,6 +59,7 @@ export default class Panel extends Base {
         );
     }
 }
+export { Panel }
 
 Panel.valueTypes = {
     object: val => {
@@ -50,9 +67,11 @@ Panel.valueTypes = {
     },
 }
 
+Panel.defaultProps = {
+	expanded: true,
+};
+
 Panel.propTypes = {
-    // required
-    // optional
+	expanded: PropTypes.bool,
 }
 
-export { Panel }

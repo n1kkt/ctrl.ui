@@ -1,6 +1,6 @@
 import { h, render, Component } from 'preact';
-import Panel from '@@/panel'
-import style from '@/control-ui.scss'
+import { Panel } from '@@/panel'
+import style from './control-ui.scss'
 
 export default class ControlUI {
 
@@ -113,11 +113,16 @@ export default class ControlUI {
                 compData.content.push(data)
             })
 
-            if (!compData.options.comp)
-                compData.options.comp = compData.options.type
-					? self.getComponentByType(compData.options.type)
-					: self.getComponentByValue(settObj)
+            if (!compData.options.comp) {
+			    if (compData.options.type) {
+					compData.options.comp = self.getComponentByType(compData.options.type)
+				} else {
+					compData.options.comp = self.getComponentByValue(settObj)
+                    if (!compData.options.comp && compData.options.value)
+						compData.options.comp = self.getComponentByValue(compData.options.value)
+                }
 
+			}
             // remove options from original object
             // opts.forEach(key => delete settObj[key])
 
