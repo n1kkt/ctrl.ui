@@ -1,7 +1,7 @@
 export * from '@/ctrl.ui'
 
 var setts = {
-	number: 100,
+	number: { $value: 100, $invalidOk: true },
 	label: "text",
 	panel: {
 		another_number: 124,

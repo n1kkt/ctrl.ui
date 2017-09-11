@@ -78,6 +78,16 @@
 
   .panel>.content {
     background-color: #bbb;
+    &.collapsed{
+      max-height: 0px;
+      transition: max-height .8s cubic-bezier(0, 1, 0, 1);
+      overflow: hidden;
+    }
+    &.expanded {
+      max-height: 9999px;
+      transition: max-height .8s cubic-bezier(0, 1, 0, 1);
+      overflow: hidden;
+    }
   }
 
   .control {

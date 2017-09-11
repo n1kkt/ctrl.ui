@@ -29,7 +29,7 @@ export default class Panel extends Base {
 
     @bind
     onChildChange(name, newValue) {
-        console.log('child changed', name, newValue)
+        console.log('child changed:', name, newValue)
         super.onChange({[name]: newValue})
     }
 
@@ -50,7 +50,7 @@ export default class Panel extends Base {
                     	<ExpandChevron expanded={expanded}/>
 					</div>
                 </div>
-                <div class="content" style={`${expanded ? '': 'display: none'}`}>
+                <div class={`content ${expanded ? 'expanded': 'collapsed'}`}>
                 {content.map(childData => Panel.constructChild(childData, {
                     notifyParentOnChange: this.onChildChange
                 }))}

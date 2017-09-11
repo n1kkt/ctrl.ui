@@ -14,10 +14,10 @@ export default class Base extends Component {
 		this.setState({ label: this.getControlLabel() });
 	}
 
-	@bind
+	//@bind
 	getControlLabel() {
-		return this.props ? this.props.label || fieldNameToLabel(this.props.name) : '_Unnamed_';
-	}
+        return this.props ? this.props.label || fieldNameToLabel(this.props.name) : '_Unnamed_';
+    }
 
     onChange(newValue, overrideCallback) {
         const cb = overrideCallback || this.props.onChange
