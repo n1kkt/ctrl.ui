@@ -4,6 +4,9 @@ var setts = {
 	number: { $value: 100, $invalidOk: true },
 	label: "text",
 	panel: {
+		$onChange: (propValue, propName) => {
+			console.log('panel values changed:', propName, propValue)
+		},
 		another_number: 124,
 		anotherLabel: "text 2",
 		range: {$value: 200, $type: 'slider', $min: 10, $max: 2000},
@@ -15,6 +18,8 @@ var setts = {
 					$onChange: function (newVal) {
 						console.log('it changes to : ' + newVal)
 						console.log('and it is : ' + setts.panel.subPanel.subSubPanel.texta)
+						setts.panel.subPanel.subSubPanel.texta = "AAA"
+						console.log('and now it is : ' + setts.panel.subPanel.subSubPanel.texta)
 					}
 				}
 			}
@@ -28,6 +33,8 @@ var setts = {
 		someVal: 100,
 	}
 }
+
+window.setts = setts
 
 console.log("hey")
 console.log(setts)

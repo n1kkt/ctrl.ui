@@ -4,36 +4,21 @@ import { bind, memoize, debounce } from 'decko';
 import { Base } from '@@/components/base';
 import style from './style.scss';
 
+
 export default class Input extends Base {
 
-	constructor() {
-		super()
+	constructor(props) {
+		super(props)
 
-		this.state.value = null
-		this.state.initialValue = null
-		this.state.initialValueType = null
-		this.state.patternCheck = null
-		this.state.hasInvalidInput = false
-	}
-
-	/* ------- OVERRIDES ------- */
-
-	componentDidMount() {
-		super.componentDidMount()
-
-		let initialValue = this.props.value
-		let initialValueType = typeof initialValue
-
-        this.setState({
-            initialValue: initialValue,
-            initialValueType: initialValueType,
-        });
+		this.state.value = props.value
+		this.state.initialValue = props.value
+		this.state.initialValueType = typeof props.value
 
 		let patternCheck,
-			ptrn = this.props.pattern
+			ptrn = props.pattern
 
-		if (!ptrn && typeof this.props.value === 'number')
-            ptrn = /^[\-\+]?\d+\.?(\d+)?$/
+		if (!ptrn && this.state.initialValueType === 'number')
+			ptrn = /^[\-\+]?\d+\.?(\d+)?$/
 
 		// make pattern check closure for current value
 		if (typeof ptrn === 'function') {
@@ -45,38 +30,46 @@ export default class Input extends Base {
 			patternCheck = val => ptrn.test(val)
 		}
 
-		this.setState({
-			patternCheck: patternCheck,
-			value: this.props.value,
-		});
+		this.state.patternCheck = patternCheck
+		this.state.hasInvalidInput = false
+		this.linkValueToOrigin()
 	}
-    @bind
-	onChange(evt, overrideCallback) {
-		let newValue = evt.target.value
 
-		let inputValid = this.state.patternCheck && this.state.patternCheck(newValue)
+	/* ------- OVERRIDES ------- */
+
+	/*componentDidMount() {
+		super.componentDidMount()
+	}*/
+
+	@bind
+	getFormattedValue() {
+		return this.state.value
+	}
+
+	@bind
+	onChange(newValue, overrideCallback) {
+		let inputValid = !this.state.patternCheck || this.state.patternCheck(newValue)
 		if (!inputValid && !this.props.invalidOk) {
 			//evt.target.value = this.state.value
 			this.setState({
 				value: this.state.value,
-				hasInvalidInput: true,
+				hasInvalidInput: false,
 			});
 			return
 		}
 
-		console.log('input changed', this.props.name, newValue)
+		console.log(' __ input changed', this.props.name, newValue)
 
-        this.setState({
-            value: newValue,
-            hasInvalidInput: !inputValid,
-        });
+		if (inputValid && this.state.initialValueType === 'number')
+			newValue = parseFloat(newValue)
 
-		if (inputValid) {
-            if (this.state.initialValueType === 'number')
-                newValue = parseFloat(newValue)
+		this.setState({
+			value: newValue,
+			hasInvalidInput: !inputValid,
+		});
 
-            super.onChange(newValue, overrideCallback)
-        }
+		if (inputValid)
+			super.onChange(newValue, overrideCallback)
 	}
 
 	/* ------- METHODS ------- */
@@ -96,7 +89,7 @@ export default class Input extends Base {
 				<div class="label">{label}</div>
 				<div class="value">
 					<input type="text" value={value}
-						   onInput={this.onChange}
+						   onInput={evt => this.onChange(evt.target.value)}
 						   onChange={this.onFinishChange}
 						   class={hasInvalidInput ? 'invalid' : ''}/>
 				</div>

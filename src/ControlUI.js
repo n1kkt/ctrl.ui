@@ -60,9 +60,10 @@ export default class ControlUI {
 
     parseSettings(settings, name) {
         const self = this
+        const crumbs = []
         // called recursively on each complex value
-        function parseSettingsObject(settObj, name, crumbs) {
-			(crumbs = crumbs || []).push(name)
+        function parseSettingsObject(settObj, name, originObj) {
+			crumbs.push(name)
             const opts = [], setts = []
             Object.keys(settObj).forEach(key => {
                 (key.charAt(0) === '$' ? opts : setts).push(key)
@@ -77,7 +78,7 @@ export default class ControlUI {
                 }
             }
 
-            const compData = newCompData(name)
+            const compData = newCompData(name, originObj)
 
             // process option fields - $***
             opts.forEach(key => {
@@ -103,12 +104,11 @@ export default class ControlUI {
             setts.forEach(settName => {
                 const settVal = settObj[settName]
                 let data = (typeof settVal === 'object' && !Array.isArray(settVal))
-                    ? parseSettingsObject(settVal, settName)
+                    ? parseSettingsObject(settVal, settName, settObj)
                     : newCompData(settName, settObj, {
                     	comp: self.getComponentByValue(settVal),
 						value: settVal
                     })
-                data.origin = settObj
                 // if (data.options.type)
                 compData.content.push(data)
             })

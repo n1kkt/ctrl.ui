@@ -12,24 +12,38 @@ export default class Panel extends Base {
             return <Comp name={childData.name}
                          {...childData.options}
                          content={childData.content}
-                         origin={childData.content}
+                         origin={childData.origin}
                          {...otherProps}/>
         else
             return null
     }
 
+	/* ------- CTOR ------- */
+
+	constructor(props) {
+		super(props)
+		this.state.expanded = props.expanded
+		if (props.origin)
+			this.state.value = props.origin[props.name]
+		this.linkValueToOrigin(true, false)
+	}
+
     /* ------- OVERRIDES ------- */
 
-	componentDidMount() {
+	/*componentDidMount() {
 		super.componentDidMount()
-		this.setState({ expanded: this.props.expanded });
+	}*/
+
+	@bind
+	getFormattedValue() {
+		return this.state.value
 	}
 
 	/* ------- METHODS ------- */
 
     @bind
-    onChildChange(name, newValue) {
-        console.log('child changed:', name, newValue)
+    onChildChange(newValue, name) {
+        console.log(' __ child changed:', name, newValue)
         super.onChange({[name]: newValue})
     }
 
