@@ -14,9 +14,9 @@ export default class Base extends Component {
 			this.onChange = debounce(this.onChange, props.debounce)
 	}
 
-	componentDidMount() {
+	/*componentDidMount() {
 
-	}
+	}*/
 
 	linkValueToOrigin(getter, setter) {
 		let oo = this.state.origin,
@@ -61,7 +61,7 @@ export default class Base extends Component {
 				newValue = this.__onChange_infiniteLoopGuard_lastValue
 				this.__onChange_infiniteLoopGuard_lastValue = undefined
 			}
-			this.props.notifyParentOnChange(newValue, this.state.name)
+			this.props.notifyParentOnChange(newValue, this)
 		}
     }
 }
@@ -75,6 +75,8 @@ Base.propTypes = {
 		PropTypes.number,
 	]).isRequired,
 	// optional
+	id: PropTypes.string,
+	tags: PropTypes.array,
 	origin: PropTypes.object,
 	onChange: PropTypes.func,
 	debounce: PropTypes.number,

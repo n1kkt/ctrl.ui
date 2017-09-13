@@ -9,8 +9,8 @@ export default class Panel extends Base {
     static constructChild(childData, otherProps) {
         const Comp = childData.options.comp
         if (Comp)
-            return <Comp name={childData.name}
-                         {...childData.options}
+            return <Comp {...childData.options}
+						 name={childData.name}
                          content={childData.content}
                          origin={childData.origin}
                          {...otherProps}/>
@@ -22,9 +22,30 @@ export default class Panel extends Base {
 
 	constructor(props) {
 		super(props)
+
 		this.state.expanded = props.expanded
 		if (props.origin)
 			this.state.value = props.origin[props.name]
+
+		let onTagChange = {}
+		if (Array.isArray(props.onTagChange)) {
+			let tagsStack = []
+			props.onTagChange.forEach(val => {
+				if (typeof val === 'string') {
+					tagsStack.push(val)
+				} else if (val instanceof Object) {
+					tagsStack.forEach(tag => onTagChange[tag] = val)
+					tagsStack = []
+				}
+			})
+		} else if (props.onTagChange instanceof Object) {
+			onTagChange = props.onTagChange
+		}
+
+		if (Object.keys(onTagChange).length)
+			this.state.onTagChange = onTagChange
+
+
 		this.linkValueToOrigin(true, false)
 	}
 
@@ -42,9 +63,20 @@ export default class Panel extends Base {
 	/* ------- METHODS ------- */
 
     @bind
-    onChildChange(newValue, name) {
-        console.log(' __ child changed:', name, newValue)
+    onChildChange(newValue, child) {
+        let { name } = child.state
+        let { tags } = child.props
+        let { onTagChange } = this.state
+
+    	console.log(' __ child changed:', name, newValue)
         super.onChange({[name]: newValue})
+
+		if (onTagChange && tags) {
+			tags.forEach(tag => {
+				if (tag in onTagChange)
+					onTagChange(newValue, name, tag)
+			})
+		}
     }
 
 	@bind
@@ -54,7 +86,8 @@ export default class Panel extends Base {
 
 	/* ----------------------- */
 
-    render({content}, {expanded, label}) {
+    render({content, onChange, notifyParentOnChange, onTagChange}, {expanded, label}) {
+    	let pcb = onChange || notifyParentOnChange || onTagChange ? this.onChildChange : null
         return (
             <div class="panel">
                 <div class="label" onClick={this.toggleExpanded}>
@@ -64,9 +97,9 @@ export default class Panel extends Base {
                     	<ExpandChevron expanded={expanded}/>
 					</div>
                 </div>
-                <div class={`content ${expanded ? 'expanded': 'collapsed'}`}>
-                {content.map(childData => Panel.constructChild(childData, {
-                    notifyParentOnChange: this.onChildChange
+                <div class={`content ${(expanded ? "expanded": "collapsed")}`}>{/*//`;*/}
+				{content.map(childData => Panel.constructChild(childData, {
+                    notifyParentOnChange: pcb
                 }))}
                 </div>
             </div>
@@ -86,6 +119,13 @@ Panel.defaultProps = {
 };
 
 Panel.propTypes = {
+	onTagChange: PropTypes.oneOfType([
+		PropTypes.objectOf(PropTypes.func),
+		PropTypes.arrayOf(PropTypes.oneOfType([
+			PropTypes.func,
+			PropTypes.string
+		])),
+	]),
 	expanded: PropTypes.bool,
 }
 

@@ -103,7 +103,7 @@ export default class ControlUI {
             // or deffer it's component by it's value
             setts.forEach(settName => {
                 const settVal = settObj[settName]
-                let data = (typeof settVal === 'object' && !Array.isArray(settVal))
+                let data = (settVal instanceof Object && !Array.isArray(settVal))
                     ? parseSettingsObject(settVal, settName, settObj)
                     : newCompData(settName, settObj, {
                     	comp: self.getComponentByValue(settVal),
