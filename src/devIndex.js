@@ -1,20 +1,28 @@
 export * from '@/ctrl.ui'
+import {collapseObject} from '@/utils'
 
 var setts = {
 	number: { $value: 100, $invalidOk: true },
 	label: "text",
 	panel: {
+		$collapseOnChange: true,
 		$onChange: (propValue, propName) => {
 			console.log('panel values changed:', propName, propValue)
 		},
+		$onTagChange: [
+			/n/g, (newValue, name, tag) => {
+				console.log('panel onTagChange:', name, tag, newValue)
+			}
+		],
 		another_number: 124,
 		anotherLabel: "text 2",
-		range: {$value: 200, $type: 'slider', $min: 10, $max: 2000},
+		range: {$value: 200, $min: 10, $max: 2000, $tags: ['num']},
 		subPanel: {
 			subSubPanel: {
 				texta: {
 					$value: "A",
 					$pattern: /^[A-Z]*$/,
+					$tags: ["nnn"],
 					$onChange: function (newVal) {
 						console.log('it changes to : ' + newVal)
 						console.log('and it is : ' + setts.panel.subPanel.subSubPanel.texta)
@@ -39,5 +47,6 @@ window.setts = setts
 console.log("hey")
 console.log(setts)
 console.log("hoy1")
+console.log(collapseObject(setts))
 
 ctrl.ui(setts)

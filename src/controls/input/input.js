@@ -47,7 +47,8 @@ export default class Input extends Base {
 	}
 
 	@bind
-	onChange(newValue, overrideCallback) {
+	onChange(evt, overrideCallback) {
+		let newValue = evt.target.value
 		let inputValid = !this.state.patternCheck || this.state.patternCheck(newValue)
 		if (!inputValid && !this.props.invalidOk) {
 			//evt.target.value = this.state.value
@@ -69,7 +70,7 @@ export default class Input extends Base {
 		});
 
 		if (inputValid)
-			super.onChange(newValue, overrideCallback)
+			super.dispatchOnChange(newValue, overrideCallback)
 	}
 
 	/* ------- METHODS ------- */
@@ -89,7 +90,7 @@ export default class Input extends Base {
 				<div class="label">{label}</div>
 				<div class="value">
 					<input type="text" value={value}
-						   onInput={evt => this.onChange(evt.target.value)}
+						   onInput={evt => this.onChange}
 						   onChange={this.onFinishChange}
 						   class={hasInvalidInput ? 'invalid' : ''}/>
 				</div>

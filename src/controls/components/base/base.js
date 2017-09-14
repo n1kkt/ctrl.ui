@@ -10,6 +10,7 @@ export default class Base extends Component {
 		this.state.label = props.label || fieldNameToLabel(props.name)
 		this.state.name = props.name
 		this.state.origin = props.origin
+		this._changeLoopGuard = false
 		if (props.debounce > 0)
 			this.onChange = debounce(this.onChange, props.debounce)
 	}
@@ -42,26 +43,30 @@ export default class Base extends Component {
 		return this.state.value
 	}
 
-    onChange(newValue, overrideCallback) {
-		const caalback = overrideCallback || this.props.onChange
-		if (caalback) {
-			if (this.__onChange_infiniteLoopGuard === caalback) {
+    onChange(thisObj, args) {
+		if (this._changeLoopGuard)
+			return
+		const callback = this.props.onChange
+		if (callback) {
+			if (this.$onChange_loopguard === callback) {
 				console.log(`Infinite loop prevention! Field: ${this.props.name} modified during onChange event. Same callback won't be called twice in same stack.`)
-				this.__onChange_infiniteLoopGuard_lastValue = newValue
+				// in case of value change while callback was executing we save last value to pass it to the parent onchange event instead of old one
+				this.$onChange_loopguard_lastval = newValue
 				return;
 			} else {
-				this.__onChange_infiniteLoopGuard = caalback
-				caalback(newValue)
-				this.__onChange_infiniteLoopGuard = undefined
+				this.$onChange_loopguard = callback
+				callback.apply(thisObj, args)
+				this.$onChange_loopguard = undefined
 			}
 		}
 
 		if (this.props.notifyParentOnChange) {
-			if (this.__onChange_infiniteLoopGuard_lastValue !== undefined) {
-				newValue = this.__onChange_infiniteLoopGuard_lastValue
-				this.__onChange_infiniteLoopGuard_lastValue = undefined
+			if (this.$onChange_loopguard_lastval !== undefined) {
+				// value was modified while onchange callback was executed, use latest lavue instead of old one
+				newValue = this.$onChange_loopguard_lastval
+				this.$onChange_loopguard_lastval = undefined
 			}
-			this.props.notifyParentOnChange(newValue, this)
+			this.props.notifyParentOnChange(thisObj, args, this)
 		}
     }
 }
@@ -78,7 +83,10 @@ Base.propTypes = {
 	id: PropTypes.string,
 	tags: PropTypes.array,
 	origin: PropTypes.object,
-	onChange: PropTypes.func,
+	onChange: PropTypes.oneOfType([
+		PropTypes.func,
+		PropTypes.arrayOf(PropTypes.func),
+	]),
 	debounce: PropTypes.number,
     notifyParentOnChange: PropTypes.func,
 }

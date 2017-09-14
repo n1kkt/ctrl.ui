@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { bind, memoize, debounce } from 'decko';
 import { Base } from '@@/components/base';
 import { ExpandChevron } from '@@/components/expand-chevron';
+import {collapseObject} from '@/utils'
 
 export default class Panel extends Base {
 
@@ -27,14 +28,19 @@ export default class Panel extends Base {
 		if (props.origin)
 			this.state.value = props.origin[props.name]
 
-		let onTagChange = {}
+		let onTagChange = { $filteredList : [] }
 		if (Array.isArray(props.onTagChange)) {
 			let tagsStack = []
 			props.onTagChange.forEach(val => {
-				if (typeof val === 'string') {
+				if (typeof val === 'string' || val instanceof RegExp) {
 					tagsStack.push(val)
-				} else if (val instanceof Object) {
-					tagsStack.forEach(tag => onTagChange[tag] = val)
+				} else if (typeof val === 'function') {
+					tagsStack.forEach(tag =>  {
+						if (typeof tag === 'string')
+							onTagChange[tag] = val
+						else
+							onTagChange.$filteredList.push([tag, val])
+					})
 					tagsStack = []
 				}
 			})
@@ -68,16 +74,28 @@ export default class Panel extends Base {
         let { tags } = child.props
         let { onTagChange } = this.state
 
-    	console.log(' __ child changed:', name, newValue)
-        super.onChange({[name]: newValue})
-
+		// notify tag specific callbacks
 		if (onTagChange && tags) {
 			tags.forEach(tag => {
 				if (tag in onTagChange)
-					onTagChange(newValue, name, tag)
+					onTagChange[tag](newValue, name, tag)
+				onTagChange.$filteredList.forEach(([regexp, func]) => {
+					if (regexp.test(tag))
+						func(newValue, name, tag)
+				})
 			})
 		}
+
+		console.log(' __ child changed:', name, newValue)
+		if (this.props.collapseOnChange) {
+			super.onChange(collapseObject({ [name]: newValue }))
+		} else {
+			super.onChange({ [name]: newValue })
+		}
+
     }
+
+
 
 	@bind
 	toggleExpanded() {
@@ -123,9 +141,10 @@ Panel.propTypes = {
 		PropTypes.objectOf(PropTypes.func),
 		PropTypes.arrayOf(PropTypes.oneOfType([
 			PropTypes.func,
-			PropTypes.string
+			PropTypes.string,
 		])),
 	]),
 	expanded: PropTypes.bool,
+	collapseOnChange: PropTypes.bool,
 }
 
