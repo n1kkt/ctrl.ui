@@ -62,32 +62,17 @@ export default class Container extends Base {
 	willChange(newValue, child) {
 		//console.log("__willChange", newValue, child)
 		let canChange = super.willChange(newValue, child) !== false
-		if (canChange)
+		if (canChange && this.props.aggregateUpdates)
 			this.__changeQueue.push(child)
 		//console.log("__willChange", this.__changeQueue.length, newValue, child)
 		return canChange
 	}
 
 	didChange(newValue, child, tags) {
-		let callback = this.props.onChange,
-			tagCallbacks = this.state.onTagChange
-		//console.log("__didChange", newValue, child)
-		if (callback || tagCallbacks) {
-			this.__changeQueue.pop()
-			newValue = {[child.state.name]: newValue}
-			if (!this.__changeQueue.length) {
-				// merge values from change cache, new override old
-				if (this.__childChangeCache) {
-					newValue = Object.assign(this.__childChangeCache, newValue)
-					this.__childChangeCache = undefined
-				}
-				// invoke callbacks
-				this.handleCallbacks(newValue, child, tags)
-			} else {
-				//console.log("\t caching", this.__changeQueue.length)
-				this.__childChangeCache = Object.assign(this.__childChangeCache || {}, newValue)
-			}
-		}
+		if (this.props.aggregateUpdates)
+            this.handleAggregatedOnChange(newValue, child, tags)
+		else
+            this.handleOnChange(newValue, child, tags)
 
 		if (this.props.parent) {
 			if (tags || child.props.tags)
@@ -98,9 +83,32 @@ export default class Container extends Base {
 
 	/* ------- METHODS ------- */
 
+	handleOnChange(newValue, child, tags) {
+        if (this.props.onChange || this.state.onTagChange) {
+            newValue = {[child.state.name]: newValue}
+			this.invokeCallbacks(newValue, child, tags)
+        }
+	}
 
+	handleAggregatedOnChange(newValue, child, tags) {
+        if (this.props.onChange || this.state.onTagChange) {
+            this.__changeQueue.pop()
+            newValue = {[child.state.name]: newValue}
+            if (!this.__changeQueue.length) {
+                // merge values from change cache, new override old
+                if (this.__childChangeCache) {
+                    newValue = Object.assign(this.__childChangeCache, newValue)
+                    this.__childChangeCache = undefined
+                }
+                // invoke callbacks
+                this.invokeCallbacks(newValue, child, tags)
+            } else {
+                this.__childChangeCache = Object.assign(this.__childChangeCache || {}, newValue)
+            }
+        }
+	}
 
-	handleCallbacks(newValue, child, tags) {
+	invokeCallbacks(newValue, child, tags) {
 		let callback = this.props.onChange,
 			tagCallbacks = this.state.onTagChange,
 			args
@@ -136,4 +144,5 @@ Container.propTypes = {
 		])),
 	]),
 	onChangeCollapveValues: PropTypes.bool,
+	aggregateUpdates: PropTypes.bool,
 }
