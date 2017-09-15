@@ -24,3 +24,20 @@ export const collapseObject = (obj, sep) => {
 	})
 	return result
 }
+
+export const deepMergeObj = (obj, sep) => {
+	sep = sep || '.'
+	let result = {}
+	Object.keys(obj).forEach(key => {
+		let val = obj[key]
+		if (val && val.constructor == Object || Array.isArray(val)) {
+			val = collapseObject(val, sep)
+			Object.keys(val).forEach(subkey => {
+				result[key + sep + subkey] = val[subkey]
+			})
+		} else {
+			result[key] = val
+		}
+	})
+	return result
+}

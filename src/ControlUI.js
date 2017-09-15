@@ -1,5 +1,5 @@
 import { h, render, Component } from 'preact';
-import { Panel } from '@@/panel'
+import { Container } from '@@/components/container'
 import style from './control-ui.scss'
 
 export default class ControlUI {
@@ -113,15 +113,20 @@ export default class ControlUI {
                 compData.content.push(data)
             })
 
-            if (!compData.options.comp) {
-			    if (compData.options.type) {
-					compData.options.comp = self.getComponentByType(compData.options.type)
-				} else {
-					compData.options.comp = self.getComponentByValue(settObj)
-                    if (!compData.options.comp && compData.options.value)
-						compData.options.comp = self.getComponentByValue(compData.options.value)
-                }
+            if (compData.options.value === undefined) {
+				compData.options.value = settObj
+            }
 
+            if (!compData.options.comp) {
+			    let comp
+			    if (compData.options.type) {
+					comp = self.getComponentByType(compData.options.type)
+				} else {
+					comp = self.getComponentByValue(settObj)
+                    if (!comp && compData.options.value)
+						comp = self.getComponentByValue(compData.options.value)
+                }
+				compData.options.comp = comp
 			}
             // remove options from original object
             // opts.forEach(key => delete settObj[key])
@@ -134,7 +139,7 @@ export default class ControlUI {
 
     init(opts) {
         let data = this.parseSettings(opts, 'options')
-        render(<div class='control-ui-container'>{Panel.constructChild(data)}</div>, data.options.mount || document.body)
+        render(<div class='control-ui-container'>{Container.constructChild(data)}</div>, data.options.mount || document.body)
         return opts
     }
 }

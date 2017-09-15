@@ -2,6 +2,7 @@ import { h, Component } from 'preact';
 import PropTypes from 'prop-types';
 import { bind, memoize, debounce } from 'decko';
 import {fieldNameToLabel} from '@/utils'
+import { Container } from "@@/components/container"
 
 export default class Base extends Component {
 
@@ -10,27 +11,29 @@ export default class Base extends Component {
 		this.state.label = props.label || fieldNameToLabel(props.name)
 		this.state.name = props.name
 		this.state.origin = props.origin
+		this.state.value = props.value
 		this._changeLoopGuard = false
 		if (props.debounce > 0)
 			this.onChange = debounce(this.onChange, props.debounce)
+		this.linkValueToOrigin()
+
+		this.__loopGueard = false
 	}
 
 	/*componentDidMount() {
 
 	}*/
 
-	linkValueToOrigin(getter, setter) {
-		let oo = this.state.origin,
+	linkValueToOrigin() {
+		let origin = this.state.origin,
 			name = this.state.name,
 			self = this
-		if (oo) {
-			delete oo[name]
-			let definition = {}
-			if (getter !== false)
-				definition.get = typeof getter === 'function' ? getter : () => self.getFormattedValue()
-			if (setter !== false)
-				definition.set = typeof setter === 'function' ? setter : newValue => { self.onChange(newValue) }
-			Object.defineProperty(oo, name, definition);
+		if (origin) {
+			delete origin[name]
+			Object.defineProperty(origin, name, {
+				get: () => self.getValue(),
+				set: newValue => { self.setValue(newValue) }
+			});
 		}
 	}
 
@@ -39,42 +42,48 @@ export default class Base extends Component {
         return this.props ? this.props.label || fieldNameToLabel(this.props.name) : '_Unnamed_';
     }
 
-	getFormattedValue() {
+	getValue() {
 		return this.state.value
 	}
 
-    onChange(thisObj, args) {
-		if (this._changeLoopGuard)
-			return
-		const callback = this.props.onChange
-		if (callback) {
-			if (this.$onChange_loopguard === callback) {
-				console.log(`Infinite loop prevention! Field: ${this.props.name} modified during onChange event. Same callback won't be called twice in same stack.`)
-				// in case of value change while callback was executing we save last value to pass it to the parent onchange event instead of old one
-				this.$onChange_loopguard_lastval = newValue
-				return;
-			} else {
-				this.$onChange_loopguard = callback
-				callback.apply(thisObj, args)
-				this.$onChange_loopguard = undefined
-			}
+	setValue(newValue) {
+		if (this.willChange(newValue) !== false) {
+			this.setState({value: newValue})
+			this.didChange(newValue)
 		}
+	}
 
-		if (this.props.notifyParentOnChange) {
-			if (this.$onChange_loopguard_lastval !== undefined) {
-				// value was modified while onchange callback was executed, use latest lavue instead of old one
-				newValue = this.$onChange_loopguard_lastval
-				this.$onChange_loopguard_lastval = undefined
-			}
-			this.props.notifyParentOnChange(thisObj, args, this)
+	willChange(newValue, child) {
+		if (this.props.parent)
+			return this.props.parent.willChange(newValue, this)
+		else
+			return true
+	}
+
+	loopGuard(func, thisObj, args) {
+		if (!this.__loopGueard) {
+			this.__loopGueard = true
+			func.apply(thisObj, args)
+			this.__loopGueard = false
 		}
-    }
+	}
+
+	didChange(newValue, child) {
+		let cb = this.props.onChange
+		if (cb)
+			this.loopGuard(this.props.onChange, null, cb.length ? [newValue] : null)
+
+		if (this.props.parent) {
+			this.props.parent.didChange(newValue, this)
+		}
+	}
 }
 export { Base }
 
 Base.propTypes = {
 	// required
 	name: PropTypes.string.isRequired,
+	parent: PropTypes.instanceOf(Container),
 	value: PropTypes.oneOfType([
 		PropTypes.string,
 		PropTypes.number,

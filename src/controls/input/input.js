@@ -31,8 +31,7 @@ export default class Input extends Base {
 		}
 
 		this.state.patternCheck = patternCheck
-		this.state.hasInvalidInput = false
-		this.linkValueToOrigin()
+		this.state.inputValid = true
 	}
 
 	/* ------- OVERRIDES ------- */
@@ -42,13 +41,12 @@ export default class Input extends Base {
 	}*/
 
 	@bind
-	getFormattedValue() {
+	getValue() {
 		return this.state.value
 	}
 
 	@bind
-	onChange(evt, overrideCallback) {
-		let newValue = evt.target.value
+	setValue(newValue) {
 		let inputValid = !this.state.patternCheck || this.state.patternCheck(newValue)
 		if (!inputValid && !this.props.invalidOk) {
 			//evt.target.value = this.state.value
@@ -59,40 +57,46 @@ export default class Input extends Base {
 			return
 		}
 
-		console.log(' __ input changed', this.props.name, newValue)
+		//let oldValue = this.getValue()
 
 		if (inputValid && this.state.initialValueType === 'number')
 			newValue = parseFloat(newValue)
 
 		this.setState({
-			value: newValue,
-			hasInvalidInput: !inputValid,
+			inputValid: inputValid,
 		});
 
-		if (inputValid)
-			super.dispatchOnChange(newValue, overrideCallback)
+		super.setValue(newValue)
 	}
 
 	/* ------- METHODS ------- */
 
     @bind
-	onFinishChange(evt) {
-		const cb = this.props.onFinishChange
-		if (cb)
-			this.onChange(evt, cb)
+	onInputChange(evt) {
+    	this.setValue(evt.target.value)
+	}
+
+	@bind
+	onInputFinishChange(evt) {
+		if (this.props.onFinishChange) {
+			let temp = this.props.onChange
+			this.props.onChange = this.props.onFinishChange
+			this.setValue(evt.target.value)
+			this.props.onChange = temp
+		}
 	}
 
 	/* ----------------------- */
 
-	render({}, {value, label, hasInvalidInput}) {
+	render({}, {value, label, inputValid}) {
 		return (
 			<div class="control input-control">
 				<div class="label">{label}</div>
 				<div class="value">
 					<input type="text" value={value}
-						   onInput={evt => this.onChange}
-						   onChange={this.onFinishChange}
-						   class={hasInvalidInput ? 'invalid' : ''}/>
+						   onInput={this.onInputChange}
+						   onChange={this.onInputFinishChange}
+						   class={!inputValid ? 'invalid' : ''}/>
 				</div>
 			</div>
 		);
