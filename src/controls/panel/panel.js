@@ -4,19 +4,25 @@ import { bind, memoize, debounce } from 'decko';
 import { Container } from '@@/components/container';
 import { ExpandChevron } from '@@/components/expand-chevron';
 import { collapseObject } from '@/utils'
+import { extendPropTypes } from '@/dtors'
 
+@extendPropTypes
 export default class Panel extends Container {
 
-    static constructChild(childData, otherProps) {
-        const Comp = childData.options.comp
-        if (Comp)
-            return <Comp {...childData.options}
-						 name={childData.name}
-                         content={childData.content}
-                         origin={childData.origin}
-                         {...otherProps}/>
-        else
-            return null
+    static valueTypes = {
+        object: val => {
+            return Object.keys(val).filter(key => key.charAt(0) !== '$').length ? 1 : 0
+        },
+    }
+
+    /* ------- PROPS ------- */
+
+    static defaultProps = {
+        expanded: true,
+    }
+
+    static propTypes = {
+        expanded: PropTypes.bool,
     }
 
 	/* ------- CTOR ------- */
@@ -25,21 +31,10 @@ export default class Panel extends Container {
 		super(props)
 
 		this.state.expanded = props.expanded
-		//if (props.origin)
-		//	this.state.value = props.origin[props.name]
 
 	}
 
     /* ------- OVERRIDES ------- */
-
-	/*componentDidMount() {
-		super.componentDidMount()
-	}*/
-
-	/*@bind
-	getValue() {
-		return this.state.value
-	}*/
 
 	/* ------- METHODS ------- */
 
@@ -68,19 +63,4 @@ export default class Panel extends Container {
     }
 }
 export { Panel }
-
-Panel.valueTypes = {
-    object: val => {
-        return Object.keys(val).filter(key => key.charAt(0) !== '$').length ? 1 : 0
-    },
-}
-
-Panel.defaultProps = {
-	expanded: true,
-};
-
-Panel.propTypes = {
-
-	expanded: PropTypes.bool,
-}
 

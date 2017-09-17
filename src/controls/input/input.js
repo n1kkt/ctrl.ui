@@ -3,9 +3,31 @@ import PropTypes from 'prop-types';
 import { bind, memoize, debounce } from 'decko';
 import { Base } from '@@/components/base';
 import style from './style.scss';
+import { extendPropTypes } from '@/dtors'
 
-
+@extendPropTypes
 export default class Input extends Base {
+
+    /* ------- PROPS ------- */
+
+    static valueTypes = {
+        string: val => 1,
+        number: val => 1,
+    }
+
+    static propTypes = {
+        pattern: PropTypes.oneOfType([
+            PropTypes.instanceOf(RegExp),
+            PropTypes.func,
+            PropTypes.string,
+        ]),
+        invalidOk: PropTypes.bool,
+    }
+
+    static defaultProps = {
+        pattern: null,
+        invalidOk: false,
+    }
 
 	constructor(props) {
 		super(props)
@@ -49,7 +71,6 @@ export default class Input extends Base {
 	setValue(newValue) {
 		let inputValid = !this.state.patternCheck || this.state.patternCheck(newValue)
 		if (!inputValid && !this.props.invalidOk) {
-			//evt.target.value = this.state.value
 			this.setState({
 				value: this.state.value,
 				hasInvalidInput: false,
@@ -104,23 +125,5 @@ export default class Input extends Base {
 }
 export { Input }
 
-Input.valueTypes = {
-	string: val => 1,
-    number: val => 1,
-}
 
-Input.propTypes = {
-	pattern: PropTypes.oneOfType([
-		PropTypes.instanceOf(RegExp),
-		PropTypes.func,
-		PropTypes.string,
-	]),
-    invalidOk: PropTypes.bool,
-}
-
-
-Input.defaultProps = {
-    pattern: null,
-    invalidOk: false,
-};
 

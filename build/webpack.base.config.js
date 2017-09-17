@@ -23,10 +23,18 @@ module.exports = config = {
 				loader: 'babel-loader',
 				exclude: /(node_modules|bower_components)/,
 				query: {
-					presets: ["es2015", "react"],
+					//presets: ["es2016", "react"],
+                    presets: ["env",
+                        /*{
+                            "targets": {
+                                "browsers": ["last 2 versions", "safari >= 7"]
+                            }
+                        }*/
+					],
 					plugins: [
 						["transform-react-jsx", { pragma: "h" }],
 						"transform-decorators-legacy",
+                        "transform-class-properties",
 						//"transform-es2015-modules-commonjs",
 						/*"transform-object-rest-spread",
 						["transform-runtime", {

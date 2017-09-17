@@ -28,6 +28,10 @@ module.exports = merge( baseWebpackConfig, {
 			/*postfix: 'unmin'//specify "nomin" postfix,
 			include: /polyfill.*!/,
 			exclude: /test.*!/*/
-		})
+		}),
+        new webpack.DefinePlugin({
+            'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'production'),
+            //'process.env': {NODE_ENV: '"development"'}
+        })
     ],
 })
