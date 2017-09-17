@@ -1,14 +1,14 @@
 $anim-time: 0.1s;
 
 .expand-chevron {
-	transition: $anim-time ease-in-out;
-	:hover {
-		polyline {
-			stroke: black;
-		}
-	}
-	&.expanded {
-		transform: rotate(90deg);
-		transition: $anim-time ease-in-out;
-	}
+  transition: $anim-time ease-in-out;
+  :hover {
+    polyline {
+      stroke: black;
+    }
+  }
+  &.expanded {
+    transform: rotate(90deg);
+    transition: $anim-time ease-in-out;
+  }
 }

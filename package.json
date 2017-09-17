@@ -7,7 +7,7 @@
   "scripts": {
     "build": "webpack --config ./build/webpack.prod.config.js",
     "dev": "webpack-dev-server --watch --inline --config ./build/webpack.dev.config.js --host 0.0.0.0",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "karma start --single-run --no-auto-watch build/karma.conf.js"
   },
   "repository": {
     "type": "git",
@@ -37,6 +37,14 @@
     "css-loader": "^0.28.7",
     "dotenv": "^4.0.0",
     "html-webpack-plugin": "^2.30.1",
+    "jasmine-core": "^2.8.0",
+    "karma": "^1.7.1",
+    "karma-chrome-launcher": "^2.2.0",
+    "karma-firefox-launcher": "^1.0.1",
+    "karma-jasmine": "^1.1.0",
+    "karma-opera-launcher": "^1.0.0",
+    "karma-safari-launcher": "^1.0.0",
+    "karma-webpack": "^2.0.4",
     "node-sass": "^4.5.3",
     "ora": "^1.3.0",
     "rimraf": "^2.6.1",

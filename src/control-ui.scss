@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css?family=Space+Mono');
 @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css');
 
-@mixin roundedCorners($size){
+@mixin roundedCorners($size) {
   -webkit-border-radius: $size + px;
   -moz-border-radius: $size + px;
   border-radius: $size + px;
@@ -51,7 +51,7 @@
     box-shadow: 0 0 1px black;
   }
 
-  .panel>.label {
+  .panel > .label {
     font-size: 12px;
     text-align: left;
     height: 100%;
@@ -76,9 +76,9 @@
     }
   }
 
-  .panel>.content {
+  .panel > .content {
     background-color: #bbb;
-    &.collapsed{
+    &.collapsed {
       max-height: 0px;
       transition: max-height .8s cubic-bezier(0, 1, 0, 1);
       overflow: hidden;
