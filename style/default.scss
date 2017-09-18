@@ -1,0 +1,16 @@
+@import url('https://fonts.googleapis.com/css?family=Space+Mono');
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css');
+
+.ctrl-ui {
+  display: block;
+  position: absolute;
+  top: 0;
+  right: 5px;
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  background-color: #eee;
+  box-sizing: border-box;
+  border-radius: 3px;
+
+  @import "layout/main";
+}

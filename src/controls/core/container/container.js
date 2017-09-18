@@ -2,7 +2,7 @@ import {h, Component} from 'preact';
 import PropTypes from 'prop-types';
 import {bind, memoize, debounce} from 'decko';
 import {toLabelCase} from '@/utils'
-import {Base} from "@@/components/base"
+import {Base} from "@@/core/base"
 import {collapseObject, deepMergeObj} from "../../../utils"
 import {extendPropTypes} from '@/dtors'
 
@@ -35,12 +35,19 @@ export default class Container extends Base {
     aggregate: PropTypes.bool,
   }
   
+  static defaultProps = {
+    onTagChange: null,
+    collapse: false,
+    aggregate: false,
+  }
+  
   
   /* ------- CTOR ------- */
   
   constructor(props) {
     super(props)
     
+    //TODO: add debounce on all callbacks
     let onTagChange = {$filterList: []}
     if (Array.isArray(props.onTagChange)) {
       let tagsStack = []
@@ -61,7 +68,8 @@ export default class Container extends Base {
     if (Object.keys(onTagChange).length)
       this.state.onTagChange = onTagChange
     
-    this.__changeQueue = []
+    if (props.aggregate)
+      this.__changeQueue = []
   }
   
   /* ------- OVERRIDES ------- */

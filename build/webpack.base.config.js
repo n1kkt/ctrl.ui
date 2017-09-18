@@ -48,7 +48,18 @@ module.exports = config = {
       },
       {
         test: /\.scss$/,
-        loaders: ['style-loader', 'css-loader', 'sass-loader']
+        loaders: [{
+          loader: "style-loader"
+        }, {
+          loader: "css-loader"
+        }, {
+          loader: "sass-loader",
+          options: {
+            includePaths: ["style"]
+          }
+        }, {
+          loader: "import-glob-loader",
+        }]
       }
     ]
   },
@@ -56,6 +67,7 @@ module.exports = config = {
     alias: {
       '@': path.resolve(__dirname, "../src"),
       '@@': path.resolve(__dirname, "../src/controls"),
+      '#': path.resolve(__dirname, "../style"),
     }
   }
 }

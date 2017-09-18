@@ -1,0 +1,54 @@
+@import "mixins.scss";
+@import "color/default";
+
+.panel {
+  background-color: $main-bg-col;
+  //overflow: hidden;
+  margin: 2px 2px;
+  //padding: 2px;
+  perspective: 1px;
+  @include roundedCorners(5);
+  box-shadow: 0 0 1px black;
+}
+
+.panel > .label {
+  font-size: 12px;
+  text-align: left;
+  height: 100%;
+  width: 100%;
+  display: table;
+  box-sizing: border-box;
+  font-weight: bold;
+  vertical-align: middle;
+  background-color: $label-bg-col;
+  .text {
+    float: left;
+    display: table-cell;
+    vertical-align: middle;
+    box-sizing: border-box;
+    color: $label-fg-col;
+  }
+  .expand-symbol {
+    color: $label-fg-col;
+    height: 100%;
+    float: right;
+    font-size: 10px;
+    display: table-cell;
+    vertical-align: middle;
+    box-sizing: border-box;
+  }
+}
+
+.panel > .content {
+  background-color: $main-bg-col;
+  &.collapsed {
+    max-height: 0px;
+    transition: max-height .8s cubic-bezier(0, 1, 0, 1);
+    overflow: hidden;
+  }
+  &.expanded {
+    max-height: 9999px;
+    transition: max-height .8s cubic-bezier(0, 1, 0, 1);
+    overflow: hidden;
+  }
+}

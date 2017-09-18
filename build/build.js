@@ -12,6 +12,10 @@ const chalk = require('chalk')
 const webpack = require('webpack')
 const runner = require('run-waterfall')
 
+// TODO: add multiple build output combinations: without style, without preact, etc
+// TODO: make npm publishing script
+// TODO: create README generator with all docs and refs
+
 function runBuild(name, config, done) {
   const spinner = ora(`building for ${name}...`)
   spinner.start()

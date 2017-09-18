@@ -1,10 +1,11 @@
 import {h, Component} from 'preact';
 import PropTypes from 'prop-types';
 import {bind, memoize, debounce} from 'decko';
-import {Container} from '@@/components/container';
-import {ExpandChevron} from '@@/components/expand-chevron';
+import {Container} from '@@/core/container';
+import {ExpandChevron} from '@@/core/expand-chevron';
 import {collapseObject} from '@/utils'
 import {extendPropTypes} from '@/dtors'
+import style from './panel.scss';
 
 @extendPropTypes
 export default class Panel extends Container {
@@ -29,9 +30,7 @@ export default class Panel extends Container {
   
   constructor(props) {
     super(props)
-    
     this.state.expanded = props.expanded
-    
   }
   
   /* ------- OVERRIDES ------- */

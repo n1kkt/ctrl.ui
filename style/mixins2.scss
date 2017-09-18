@@ -1,0 +1,5 @@
+@mixin roundedCorners2($size) {
+  -webkit-border-radius: $size + px;
+  -moz-border-radius: $size + px;
+  border-radius: $size + px;
+}

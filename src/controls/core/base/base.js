@@ -2,13 +2,14 @@ import {h, Component} from 'preact';
 import PropTypes from 'prop-types';
 import {bind, memoize, debounce} from 'decko';
 import {toLabelCase} from '@/utils'
-import {Container} from "@@/components/container"
+import {Container} from "@@/core/container"
 
 export default class Base extends Component {
   
   static propTypes = {
     // required
     name: PropTypes.string.isRequired,
+    description: PropTypes.string,
     parent: PropTypes.instanceOf(Container),
     value: PropTypes.any.isRequired,
     // optional
@@ -32,7 +33,7 @@ export default class Base extends Component {
     origin: null,
     onChange: null,
     debounce: 0,
-    notifyParentOnChange: false,
+    notifyParentOnChange: null,
   }
   
   constructor(props) {
@@ -43,7 +44,7 @@ export default class Base extends Component {
     this.state.value = props.value
     this._changeLoopGuard = false
     if (props.debounce > 0)
-      this.onChange = debounce(this.onChange, props.debounce)
+      this.loopGuard = debounce(this.loopGuard, props.debounce)
     this.linkValueToOrigin()
     
     this.__loopGueard = false

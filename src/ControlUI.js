@@ -1,8 +1,15 @@
 import {h, render, Component} from 'preact';
-import {Container} from '@@/components/container'
-import style from './control-ui.scss'
+import {Container} from '@@/core/container'
+
+import defaultStyle from '#/default.scss'
+import lightStyle from '#/light.scss'
+
+const optChar = '$'
 
 export default class ControlUI {
+  
+  // TODO: create interface to test default control-from-data matching
+  // TODO: create interface for getting al info about registered controls
   
   constructor() {
     this.typeChecks = []
@@ -67,7 +74,7 @@ export default class ControlUI {
       crumbs.push(name)
       const opts = [], setts = []
       Object.keys(settObj).forEach(key => {
-        (key.charAt(0) === '$' ? opts : setts).push(key)
+        (key.charAt(0) === optChar ? opts : setts).push(key)
       })
       
       const newCompData = (name, origin, options, content, comp) => {
@@ -89,7 +96,7 @@ export default class ControlUI {
         // so just unpack object into options
         if (optName === '') {
           if (typeof optVal !== 'object')
-            return console.error(`Options collection $ should be an object: { $: {...}}.`
+            return console.error(`Options collection ${optChar} should be an object: { ${optChar}: {...}}.`
               + ` Location: '${crumbs.join('.')}', value type: '${typeof optVal}'`
               + `, value: '${optVal}'`)
           Object.entries(optVal).forEach(([key, value]) => {
@@ -141,7 +148,7 @@ export default class ControlUI {
   init(opts) {
     let data = this.parseSettings(opts, 'options')
     render(<div
-      class='control-ui-container'>{Container.constructChild(data)}</div>, data.options.mount || document.body)
+      class='ctrl-ui light'>{Container.constructChild(data)}</div>, data.options.mount || document.body)
     return opts
   }
 }

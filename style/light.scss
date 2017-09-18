@@ -1,0 +1,8 @@
+
+.ctrl-ui.light {
+  @import "color/light";
+
+  @import "default";
+
+  @import "../src/**/*.scss";
+}

@@ -1,0 +1,9 @@
+@charset "UTF-8";
+
+$main-bg-col: #333 !default;
+$header-bg-col: lighten($main-bg-col, 5%) !default;
+$label-bg-col: lighten($header-bg-col, 5%) !default;
+
+$main-fg-col: #EEE !default;
+$header-fg-col: darken($main-fg-col, 10%) !default;
+$label-fg-col: darken($header-fg-col, 10%) !default;
