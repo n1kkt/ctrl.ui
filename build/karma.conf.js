@@ -1,5 +1,6 @@
-var webpack = require('karma-webpack');
-var webpackconfig = require('./webpack.karma.config')
+const webpack = require('karma-webpack');
+const webpackconfig = require('./webpack.karma.config')
+const path = require('path')
 
 module.exports = function (config) {
   config.set({
@@ -18,7 +19,11 @@ module.exports = function (config) {
     browsers: ['Chrome', /*'Firefox', 'Safari', 'Opera'*/],
     // list of files to exclude
     exclude: [],
-    plugins:[ webpack, 'karma-jasmine', 'karma-chrome-launcher',
+    plugins:[
+      webpack,
+      'karma-jasmine',
+      'karma-chrome-launcher',
+      'karma-coverage-istanbul-reporter',
       // 'karma-coverage',
       // 'karma-spec-reporter',
     ],
@@ -37,18 +42,63 @@ module.exports = function (config) {
     // test results reporter to use
     // possible values: 'dots', 'progress'
     // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-    reporters: ['progress'],
-    // TODO: add coverage
-    /*reporters: [ 'spec', 'coverage' ],
+    reporters: [
+      'progress',
+      //'coverage',
+      'coverage-istanbul',
+    ],
     coverageReporter: {
-      dir: '../coverage',
-      reporters: [
-        { type: 'html', subdir: 'report-html' },
-        { type: 'lcov', subdir: 'report-lcov' },
-        { type: 'cobertura', subdir: '.', file: 'cobertura.txt' }
-      ]
-    },*/
-    
+      type : 'html',
+      dir : 'test/coverage/',
+      instrumenterOptions: {
+        istanbul: { noCompact: true }
+      }
+    },
+    coverageIstanbulReporter: {
+      reports: [
+        //'clover',
+        //'cobertura',
+        'html',
+        'json-summary',
+        'json',
+        //'lcov',
+        //'lcovonly',
+        //'none',
+        //'teamcity',
+        //'text-lcov',
+        'text-summary',
+        'text',
+      ],
+      dir: path.join(__dirname, '../test/coverage'),
+      fixWebpackSourcePaths: true,
+      skipFilesWithNoCoverage: false,
+      'report-config': {
+        'html': { subdir: 'html' },
+        'text': { file: 'text.txt' },
+        //'text-summary': { file: 'text-summary.txt' },
+      },
+      /*thresholds: {
+        emitWarning: false, // set to `true` to not fail the test command when thresholds are not met
+        global: { // thresholds for all files
+          statements: 100,
+          lines: 100,
+          branches: 100,
+          functions: 100
+        },
+        each: { // thresholds per file
+          statements: 100,
+          lines: 100,
+          branches: 100,
+          functions: 100,
+          overrides: {
+            'baz/component/!**!/!*.js': {
+              statements: 98
+            }
+          }
+        }
+      },*/
+    },
+  
     webpack: webpackconfig,
     webpackServer: { noInfo: true },
   
