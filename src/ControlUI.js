@@ -148,7 +148,7 @@ export default class ControlUI {
   init(opts) {
     let data = this.parseSettings(opts, 'options')
     render(<div
-      class='ctrl-ui light'>{Container.constructChild(data)}</div>, data.options.mount || document.body)
+      class='ctrl-ui'>{Container.constructChild(data)}</div>, data.options.mount || document.body)
     return opts
   }
 }

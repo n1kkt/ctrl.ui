@@ -1,5 +1,5 @@
-@import "mixins.scss";
-@import "color/default";
+@import "mixins";
+@import "../../../style/color/default";
 
 .panel {
   background-color: $main-bg-col;

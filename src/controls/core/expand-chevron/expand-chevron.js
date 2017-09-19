@@ -1,7 +1,7 @@
 import {h, Component} from 'preact';
 import PropTypes from 'prop-types';
 import {bind, memoize, debounce} from 'decko';
-import style from './style.scss';
+import style from './expand-chevron.scss';
 
 export default class ExpandChevron extends Component {
   render({size, thickness, expanded}, {}) {

@@ -1,3 +1,6 @@
+@import "mixins";
+@import "../../../style/color/default";
+
 .input-control {
   .value {
     input.invalid {

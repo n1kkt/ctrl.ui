@@ -2,7 +2,7 @@ import {h, Component} from 'preact';
 import PropTypes from 'prop-types';
 import {bind, memoize, debounce} from 'decko';
 import {Base} from '@@/core/base';
-import style from './style.scss';
+import style from './input.scss';
 import {extendPropTypes} from '@/dtors'
 
 @extendPropTypes
