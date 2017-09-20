@@ -3,8 +3,9 @@
 
 .input-control {
   .value {
+
     input.invalid {
-      background-color: #fbb;
+      background-color: $invalid-bg;
     }
   }
 }

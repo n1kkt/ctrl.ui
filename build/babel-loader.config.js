@@ -14,12 +14,6 @@ module.exports = {
         polyfill: false,
         regenerator: false
       }]*/
-      ["istanbul", {
-        "exclude": [
-          "**/*.spec.js"
-        ],
-        "useInlineSourceMaps": false
-      }]
     ]
   }
 }

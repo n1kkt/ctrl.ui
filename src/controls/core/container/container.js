@@ -1,10 +1,10 @@
 import {h, Component} from 'preact';
 import PropTypes from 'prop-types';
 import {bind, memoize, debounce} from 'decko';
-import {toLabelCase} from '@/utils'
+import {toLabelCase} from '@/utils/utils'
 import {Base} from "@@/core/base"
-import {collapseObject, deepMergeObj} from "../../../utils"
-import {extendPropTypes} from '@/dtors'
+import {collapseObject, deepMergeObj} from "../../../utils/utils"
+import {extendPropTypes} from '@/utils/decorators'
 
 @extendPropTypes
 export default class Container extends Base {

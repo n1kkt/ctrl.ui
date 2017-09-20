@@ -1,7 +1,7 @@
 import {h, Component} from 'preact';
 import PropTypes from 'prop-types';
 import {bind, memoize, debounce} from 'decko';
-import {toLabelCase} from '@/utils'
+import {toLabelCase} from '@/utils/utils'
 import {Container} from "@@/core/container"
 
 export default class Base extends Component {

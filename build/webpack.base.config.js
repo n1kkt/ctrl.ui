@@ -26,7 +26,7 @@ module.exports = config = {
         loaders: [
           { loader: "style-loader" },
           { loader: "css-loader" },
-          { loader: "sass-loader", options: { includePaths: ["style"] } },
+          { loader: "sass-loader", options: { includePaths: [resolve("style")] } },
           { loader: "import-glob-loader" }
         ]
       }

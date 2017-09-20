@@ -1,12 +1,12 @@
 import {h, render, Component} from 'preact';
-import {Container} from '@@/core/container'
+import {Container} from '@@/core/container/index'
 
 import defaultStyle from '#/default.scss'
 import lightStyle from '#/light.scss'
 
 const optChar = '$'
 
-export default class ControlUI {
+export default class CtrlUI {
   
   // TODO: create interface to test default control-from-data matching
   // TODO: create interface for getting al info about registered controls
@@ -19,7 +19,7 @@ export default class ControlUI {
   registerComponent(comp, name) {
     let compName = name || comp.name
     if (compName)
-      this.compMap[compName] = comp
+      this.compMap[compName.toLowerCase()] = comp
     else
       throw new Error(`No component name specified`)
     
@@ -38,6 +38,16 @@ export default class ControlUI {
       }
       this.typeChecks.push([comp, valueType, check])
     })
+  }
+  
+  getComponentsListArr() {
+    return Object.entries(this.compMap).map(([name, comp]) => comp)
+  }
+  
+  getComponentsListObj() {
+    let obj = {}
+    Object.entries(this.compMap).map(([name, comp]) => {obj[name] = comp})
+    return obj
   }
   
   getComponentByValue(value) {
@@ -152,3 +162,4 @@ export default class ControlUI {
     return opts
   }
 }
+export { CtrlUI }

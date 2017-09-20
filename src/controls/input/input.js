@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {bind, memoize, debounce} from 'decko';
 import {Base} from '@@/core/base';
 import style from './input.scss';
-import {extendPropTypes} from '@/dtors'
+import {extendPropTypes} from '@/utils/decorators'
 
 @extendPropTypes
 export default class Input extends Base {

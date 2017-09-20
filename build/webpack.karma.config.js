@@ -8,14 +8,20 @@ const baseWebpackConfig = require('./webpack.base.config')
 
 const babelLoaderConfig = require('./babel-loader.config')
 
-babelLoaderConfig.query.plugins.push([
+// istanbul worked, together with karma-coverage-istanbul-reporter
+// but it did not save reports while being run from Webstorm test runner
+/*babelLoaderConfig.query.plugins.push([
   "istanbul", {
     "exclude": [
-      "**/*.spec.js"
+      "**!/!*.spec.js",
+      "**!/!*.test.js",
+      "test/!**!/!*",
     ],
     "useInlineSourceMaps": false
   }
-])
+])*/
+
+babelLoaderConfig.query.plugins.push("__coverage__")
 
 module.exports = config = merge.smart(baseWebpackConfig, {
   devtool: "inline-source-map",

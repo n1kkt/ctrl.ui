@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import {bind, memoize, debounce} from 'decko';
 import {Container} from '@@/core/container';
 import {ExpandChevron} from '@@/core/expand-chevron';
-import {collapseObject} from '@/utils'
-import {extendPropTypes} from '@/dtors'
+import {collapseObject} from '@/utils/utils'
+import {extendPropTypes} from '@/utils/decorators'
 import style from './panel.scss';
 
 @extendPropTypes

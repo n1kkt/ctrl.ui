@@ -1,8 +1,27 @@
-export * from '@/ctrl.ui'
-import {collapseObject} from '@/utils'
+//import ui from '@/index'
+export default ui
+import {h, render, Component} from 'preact';
+import CtrlUI from '@/ctrl.ui/ctrl.ui'
+import * as components from "@@";
 
-// TODO: add styling
-//import style from './control-ui.scss'
+let ctrlui = new CtrlUI()
+Object.keys(components).forEach(name => {
+  ctrlui.registerComponent(components[name])
+})
+
+let ui = (opts) => {
+  return ctrlui.init(opts)
+}
+
+ui.components = {}
+Object.keys(components).forEach(key => {
+  ui.components[key] = components[key]
+})
+
+ui.registerComponent = ctrlui.registerComponent
+
+let crtl = window.ctrl || (window.ctrl = {})
+crtl.ui = ui
 
 var setts = {
   $debounce: "A",
@@ -23,6 +42,7 @@ var setts = {
     number_21: 101,
     label_2: "text1",
     panel_1_2: {
+      
       $onChange: (newVal) => {
         console.log('panel_1_2 values changed:', newVal)
       },
@@ -66,9 +86,8 @@ var setts = {
 
 window.setts = setts
 
-console.log("hey")
-console.log(setts)
-console.log("hoy1")
-console.log(collapseObject(setts))
-
-ctrl.ui(setts)
+ctrl.ui(setts);
+debugger
+let v = ctrlui.getComponentByValue('asd')
+debugger
+//--------------

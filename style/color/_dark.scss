@@ -7,3 +7,9 @@ $label-bg-col: lighten($header-bg-col, 5%) !default;
 $main-fg-col: #EEE !default;
 $header-fg-col: darken($main-fg-col, 10%) !default;
 $label-fg-col: darken($header-fg-col, 10%) !default;
+
+$main-text-col: $main-fg-col !default;
+$header-text-col: $header-fg-col !default;
+$label-text-col: $label-fg-col !default;
+
+$invalid-bg: #fbb !default;
